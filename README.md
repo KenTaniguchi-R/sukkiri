@@ -8,32 +8,29 @@ need — photos, price, delivery, buy button — are at the top, in one screen.
 
 ## One product page, before and after
 
-Both images below are the same page at the same scale.
+Both columns below are the same page, uncut, at the same scale.
 
 <table>
   <tr>
-    <th align="left">Before &mdash; 121,201px to reach the cart</th>
-    <th align="left">After &mdash; 1,990px</th>
+    <th align="left" width="50%">Before &mdash; 121,273px to reach the cart</th>
+    <th align="left" width="50%">After &mdash; 2,033px</th>
   </tr>
   <tr valign="top">
-    <td>
-      <img src="docs/before-full.png" width="780"
-           alt="One Rakuten product page captured in full and folded into ten tall columns. Every column is the shop's own dress photography and banners; the cart button appears only at the bottom of the tenth.">
+    <td width="50%">
+      <img src="docs/before-full.jpg" width="400"
+           alt="One Rakuten product page in full, top to bottom: award badges, shop banners, then several hundred marketing photographs, with the cart button only at the very end, 121,273 pixels down.">
     </td>
-    <td>
-      <img src="docs/after-full.png" width="85"
-           alt="The same page after Sukkiri: a single short column with the gallery, price, buy box and reviews.">
+    <td width="50%">
+      <img src="docs/after-full.jpg" width="400"
+           alt="The same page after Sukkiri: gallery, title, price, buy box, specification table and reviews, ending after 2,033 pixels.">
     </td>
   </tr>
 </table>
 
-The left image is one continuous scroll, folded into ten columns so it fits on
-screen. Award badges, shop banners, then several hundred marketing photographs
-&mdash; and the cart button only at the very bottom, **121,201 pixels down**,
-roughly 143 screens.
-
-The right image is the same product after Sukkiri, at the same scale:
-**1,990 pixels.**
+Keep scrolling the left column. That is one product page, and the cart button
+is at the bottom of it &mdash; **121,273 pixels down**, roughly 143 screens.
+The right column is the same product after Sukkiri: **2,033 pixels**, about
+60&times; shorter.
 
 ### The first screen
 
@@ -56,7 +53,7 @@ After &mdash; photos, price, points, stock and the buy box, all above the fold.
 **Product pages**
 
 - The buy box moves to the top. On the page above, the cart form sat at
-  **121,201px** and now sits at **408px**.
+  **121,273px** and now sits at **408px**.
 - Photos come from Rakuten's own product gallery, not the shop's banner art.
 - Points, instalments and 定期購入 (subscription) stay exactly where you can see
   them, because they're moved, not recreated.
