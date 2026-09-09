@@ -77,7 +77,7 @@ photos, black readable titles, red prices, and the delivery estimate promoted.](
 
 ## Install
 
-Not on the Chrome Web Store — see [Honest limitations](#honest-limitations).
+Chrome Web Store submission in progress. Until it lands, load unpacked:
 
 1. Download this repo (**Code → Download ZIP**, then unzip) or `git clone` it
 2. Go to `chrome://extensions`
@@ -114,8 +114,9 @@ Worth knowing before you install:
 - **Sponsored results are hidden** on search pages.
 - Desktop Chrome only.
 
-That's also why it isn't on the Web Store: putting it there is a support
-promise, and this isn't ready to make one.
+Being on the Web Store is a support promise — a Rakuten redesign breaks it for
+everyone at once, and there is no telemetry to warn you. Bear that in mind
+before relying on it.
 
 ---
 
