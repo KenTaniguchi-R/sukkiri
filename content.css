@@ -1,0 +1,475 @@
+/* ==========================================================================
+   Sukkiri — Amazon palette + the rebuilt PDP, plus the search-results
+   restyle. Item pages are rebuilt by content.js; search pages are styled
+   in place because there Rakuten's own markup is stable and consistent.
+   ========================================================================== */
+
+:root{
+  /* measured off amazon.co.jp, not guessed. amazon.co.jp does NOT use Amazon
+     Ember for Japanese and its link colour is blue, not the .com teal. */
+  /* Rakuten-native accents on an Amazon-shaped layout: the structure is
+     borrowed, the colour is Rakuten's own crimson rather than Amazon yellow. */
+  --az-link:#BF0000; --az-hover:#8F0000; --az-ink:#0F1111;
+  --az-sub:#666666;  --az-line:#DDDDDD; --az-star:#F5A623; --az-green:#0B7B3C;
+  --az-cart:#BF0000; --az-buynow:#8F0000;
+  --az-font:"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+}
+
+/* ---------- global chrome removal (both page types) ---------- */
+/* Scoped to .rz-item / .rz-search (set by content.js). Unscoped, the last
+   selector matched a shop top page's entire storefront — one div holding 3,379
+   descendants, 7,044 characters and 21 images — and blanked the page down to
+   header + footer. Shop, cart, category and every other Rakuten page is now
+   left completely alone. */
+:is(.rz-item, .rz-search) :is(
+  #mkdiv_header_pitari, [id^="cmo_"], .smartBanner, .categoryWordBanner,
+  .dui-container.alert, .adBta, .realtimeSurvey, .relatedServices, .pocDataDisplay,
+  #chat_widget, #rightBnr, #foot_couponFrame, #topBrand,
+  blink, marquee,
+  /* only the dark leaking tooltip, NOT the shop's nav dropdowns, which use the
+     same popover-container prefix */
+  [class*="popover-container--"][class*="message--"],
+  /* Rakuten's sticky floating cart: redundant once the buy box is rebuilt, and
+     from inside the collapsed shop fold it pushed the page to 1389px wide at a
+     1272px viewport */
+  [class*="floating-cart-wrapper"]
+){ display:none !important; }
+
+/* the item-page coupon strip: a body-level spacer wrapping a lone image link */
+.rz-item body > div > [class*="spacer--"][class*="block--"]:has(> [class*="container--"] > img[class*="image--"]){
+  display:none !important;
+}
+
+/* ---------- typography. Rakuten ships two icon fonts; a blanket override
+     turns them to tofu, so both are re-asserted straight after. ---------- */
+:is(.rz-item, .rz-search) body,
+:is(.rz-item, .rz-search) body * { font-family: var(--az-font) !important; }
+/* pseudo-elements are not valid inside :is(), so these stay written out */
+.rz-item .dui-icon, .rz-item .dui-icon::before,
+.rz-search .dui-icon, .rz-search .dui-icon::before { font-family: RUIicon !important; }
+.rz-item [class*="icon--"], .rz-item [class*="icon--"]::before,
+.rz-search [class*="icon--"], .rz-search [class*="icon--"]::before{ font-family:"ichiba-icon-font",sans-serif !important; }
+
+:is(.rz-item, .rz-search) body { background:#fff !important; color:var(--az-ink) !important; }
+
+/* ---------- header: left exactly as Rakuten ships it ----------
+   Every header restyle is gone on purpose. Painting the bar dark meant
+   painting its text white, and each light popover nested inside it then
+   rendered white-on-white — the SPU point panel, then all 10 search
+   suggestions. Rakuten's own header is already coherent; the value of this
+   extension is the rebuilt product page below it, not the chrome. */
+
+/* ==========================================================================
+   THE REBUILT PRODUCT PAGE
+   ========================================================================== */
+/* border-box everywhere: .rz-buy is width:275px with 18px padding, so without
+   this it measures 313px inside a 275px grid track and pushes the whole page
+   into a horizontal scrollbar (bodyScrollWidth 1445 at a 1440 viewport). */
+#sukkiri-pdp, #sukkiri-pdp *{ box-sizing:border-box; }
+
+#sukkiri-pdp{
+  /* display is forced: some shops ship CSS that hides unknown body-level
+     divs (orbis-shop computed display:none on the injected root). */
+  display:block !important; visibility:visible !important;
+  /* clip, not hidden/auto: absolutely-positioned Rakuten tooltips and the
+     shop's own wide content were extending the document to 1389px at a 1272px
+     viewport. `clip` contains them without creating a scroll container, so
+     the sticky gallery and buy box keep working (verified: identical sticky
+     behaviour with and without it). */
+  overflow-x:clip;
+  max-width:1500px; margin:0 auto; padding:0 18px 44px;
+  color:var(--az-ink); font-family:var(--az-font);
+}
+#sukkiri-pdp a{ color:var(--az-link); text-decoration:none; }
+#sukkiri-pdp a:hover{ color:var(--az-hover); text-decoration:underline; }
+
+.rz-crumb{ font-size:12px; color:var(--az-sub); padding:11px 0; }
+.rz-crumb .rz-sep{ margin:0 6px; color:#c7c7c7; }
+
+.rz-main{
+  /* amazon.co.jp runs a 275px buy column, but the blocks we move into ours are
+     Rakuten's own (#offers + the cart form) and they are authored for 400px.
+     Measured on the logicool PDP, #offers wraps to 263px tall at a 275px
+     column and settles at its natural 205px at 400px — and the ORBIS
+     通常購入/定期購入 chooser is unreadable below ~400px (prices break
+     mid-number, the 定期購入 label stacks one character per line).
+     Matching Rakuten's authored width beats matching Amazon's pixel count. */
+  display:grid;
+  grid-template-columns:64px minmax(200px,420px) minmax(220px,1fr) 400px;
+  gap:24px; align-items:start;
+}
+.rz-thumbs{ display:flex; flex-direction:column; gap:8px; }
+.rz-thumbs img{
+  width:52px; height:52px; object-fit:contain; background:#fff;
+  border:1px solid var(--az-line); border-radius:6px; padding:2px; cursor:pointer;
+}
+.rz-thumbs img.on{ border-color:var(--az-link); box-shadow:0 0 0 2px rgba(0,113,133,.55); }
+
+.rz-hero{ position:sticky; top:12px; max-width:520px; }
+/* Cap the hero. With width:100% + aspect-ratio:1 in a full-width column it
+   rendered 1141x1141 at a 1272px viewport — a full screen of product photo
+   with the title and buy box pushed 1,300px+ down the page. */
+.rz-hero img{ width:100%; max-height:520px; aspect-ratio:1; object-fit:contain; background:#fff; }
+
+.rz-title{ font-size:24px; line-height:32px; font-weight:400; margin:0 0 7px; }
+.rz-by{ font-size:14px; margin-bottom:7px; }
+.rz-rate{ display:flex; align-items:center; gap:7px; font-size:14px;
+          padding-bottom:13px; border-bottom:1px solid var(--az-line); }
+.rz-rate b{ font-weight:400; }
+.rz-rate .rz-n{ color:var(--az-link); }
+
+/* Stars: two stacked ★★★★★ runs, orange one clipped to a % width.
+   Avoids the missing ⯪ half-star glyph and gives fractional accuracy. */
+.rz-stars{ position:relative; display:inline-block; white-space:nowrap;
+           color:#D5D9D9; font-size:16px; letter-spacing:1px; line-height:1; }
+.rz-stars::before{ content:"★★★★★"; }
+.rz-stars i{ position:absolute; inset:0 auto 0 0; overflow:hidden;
+             color:var(--az-star); white-space:nowrap; font-style:normal; }
+.rz-stars i::before{ content:"★★★★★"; }
+
+.rz-price{ padding:15px 0; border-bottom:1px solid var(--az-line); }
+.rz-priceline{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+.rz-priceline .amt{ white-space:nowrap; }
+/* a range ("￥3,410 〜 ￥3,630") is nearly twice as wide as a single price and
+   pushed 税込 onto its own line in a narrow centre column */
+.rz-priceline:has(.dash) .amt{ font-size:24px; }
+.rz-price .amt{ font-size:28px; font-weight:400; }
+.rz-price .pct{ color:#CC0C39; font-size:24px; }
+.rz-price .cur{ font-size:13px; vertical-align:baseline; margin-right:1px; }
+.rz-tax{ font-size:13px; color:var(--az-ink); margin-left:5px; }
+.rz-ship{ font-size:13px; color:var(--az-sub); margin-top:5px; }
+.rz-price .dash{ font-size:22px; color:var(--az-sub); }
+.rz-buy .dash{ font-size:19px; color:var(--az-sub); }
+.rz-list{ font-size:13px; color:var(--az-sub); margin-bottom:3px; }
+.rz-list .pct{ color:#CC0C39; font-size:17px; font-weight:400; margin-right:5px; }
+.rz-list s{ color:var(--az-sub); }
+.rz-ship b{ color:var(--az-ink); }
+.rz-desc{ font-size:14px; line-height:1.78; padding:15px 0; color:#222; }
+
+.rz-buy{
+  width:400px; border:1px solid var(--az-line); border-radius:8px;
+  padding:14px 18px; position:sticky; top:12px; background:#fff;
+}
+.rz-buy .amt{ font-size:28px; }
+.rz-buy .cur{ font-size:13px; vertical-align:baseline; }
+.rz-buy .free{ color:var(--az-green); font-size:14px; margin:6px 0 2px; }
+.rz-buy .stock{ color:var(--az-green); font-size:18px; font-weight:400; margin:12px 0; }
+
+/* Rakuten's cart table ships at a fixed 400px with the two buttons side by
+   side; renormalise it to the buy-box width. */
+/* Rakuten's cart ships at a fixed 400px and its SKU row carries an explicit
+   min-width:400px, which overflows a 275px buy box (orbis-shop's つめかえ用
+   option was clipped). Clearing min-width across the subtree is what actually
+   fixes it — width/max-width alone does not, min-width wins over both. */
+/* Both moved Rakuten blocks ship at a fixed ~400-540px with explicit
+   min-widths, which overflow a 275px buy box; clearing min-width is what
+   actually fixes it — width/max-width alone lose to it. */
+.rz-cart *, .rz-offers *{ min-width:0 !important; max-width:100% !important; box-sizing:border-box !important; }
+/* …but not fixed-size form controls. The blanket max-width squashed the
+   unchecked 定期購入 radio from 20x20 to 11x20 — an ellipse that reads as a
+   "0" next to the properly round checked one. */
+.rz-cart input[type=radio], .rz-cart input[type=checkbox],
+.rz-offers input[type=radio], .rz-offers input[type=checkbox]{
+  max-width:none !important; min-width:0 !important; flex:0 0 auto !important;
+}
+.rz-offers{ margin-bottom:4px; }
+.rz-offers [class*="card--"]{ border:1px solid var(--az-line) !important; border-radius:8px !important; }
+.rz-offers img{ height:auto !important; }
+/* #offers is wrapped in table#rakutenLimitedId_cart whose rows have differing
+   cell counts. Under table-layout:fixed the column count comes from the first
+   row, so the single-cell row holding the 通常購入/定期購入 cards was pinned to
+   half the box — cards 181px inside a 364px column, with dead space to their
+   right. table-layout:auto instead lets the table overflow (cards went to
+   400px in a 364px box), so flatten the table to blocks: every row here is a
+   stacked card, nothing needs real columns. */
+.rz-offers table, .rz-offers tbody, .rz-offers tr, .rz-offers td, .rz-offers th{
+  display:block !important; width:100% !important; max-width:100% !important;
+  padding:0 !important; border:0 !important;
+}
+/* Do NOT add width:auto or overflow-wrap:anywhere here — tried, and it breaks
+   Rakuten's own layout: prices split mid-number ("3,41 円 0") and the 定期購入
+   label renders one character per line. */
+.rz-cart table{ width:100% !important; table-layout:fixed !important; }
+/* SKU option grid. 1fr made every option a full-width row and, combined with
+   the width:auto below, left them content-sized and ragged (96 / 124 / 96px).
+   auto-fill gives uniform cells that fill the 364px box two-up. */
+.rz-cart [class*="grid-cols-"]{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)) !important; }
+.rz-cart [class*="grid-element--"]{ min-width:0 !important; }
+.rz-cart td, .rz-cart th{ display:block !important; width:auto !important;
+                          padding:0 !important; border:0 !important; }
+.rz-cart .floatingCartPurchaseButtonsContainer,
+.rz-cart [class*="PurchaseButtons"]{
+  display:flex !important; flex-direction:column !important; gap:9px !important; margin-top:12px !important;
+}
+/* The two buttons live several wrapper divs deep, and one of those wrappers is
+   width-constrained, so they rendered at 192px in a 364px box — two fat pills
+   touching, which read as a single notched blob. The container's own gap does
+   not separate them because both sit inside ONE of its children, hence margin
+   on the buttons themselves. */
+.rz-cart .floatingCartPurchaseButtonsContainer *{ width:100% !important; }
+.rz-cart .floatingCartPurchaseButtonsContainer button{
+  width:100% !important; margin:5px 0 !important;
+  justify-content:center !important; gap:8px !important;
+}
+/* …but not the icon and label inside, or width:100% spreads them to opposite
+   ends of the button instead of centring them together. */
+.rz-cart .floatingCartPurchaseButtonsContainer button *{ width:auto !important; }
+
+/* Label + icon白 on the crimson pills. Setting colour on the button alone is
+   not enough — the icon and label are their own spans — hence descendants and
+   `fill` for the SVG. (Black was right on the yellow pills; on #BF0000 it
+   fails contrast, so this flips with the background.) */
+.rz-cart .floatingCartPurchaseButtonsContainer button,
+.rz-cart .floatingCartPurchaseButtonsContainer button *{
+  color:#fff !important; fill:#fff !important;
+}
+
+/* The 数量 stepper also lives inside floatingCartPurchaseButtonsContainer, so
+   the width:100% above blew the − and + up to 362px each and crushed the
+   number field to 6px. Higher specificity puts it back. */
+.rz-buy .rz-cart [class*="stepper--"] *{ width:auto !important; }
+.rz-buy .rz-cart [class*="stepper--"]{ width:100% !important; display:flex !important; align-items:stretch !important; }
+.rz-buy .rz-cart [class*="incrementor--"]{ flex:0 0 auto !important; width:44px !important; justify-content:center !important; }
+.rz-buy .rz-cart [class*="stepper--"] input{ flex:1 1 auto !important; text-align:center !important; }
+/* the two buttons are wrapped in inline-block spacers, which is what actually
+   kept them side by side after the grid rule */
+.rz-cart [class*="spacer--"], .rz-cart [class*="trigger--"], .rz-cart [class*="anchor--"]{
+  display:block !important; width:100% !important;
+}
+.rz-cart button{
+  /* amazon.co.jp: 32px tall, 100px radius, 14px, no shadow, 0.8px border */
+  width:100% !important; min-height:32px !important; border-radius:100px !important;
+  font-size:14px !important; padding:6px 10px !important;
+  border:.8px solid var(--az-cart) !important;
+  background:var(--az-cart) !important; color:#fff !important;
+  box-shadow:none !important; cursor:pointer;
+}
+/* 今すぐ買う orange. Tagged in content.js because :nth-of-type cannot reach
+   it — Rakuten wraps each button in its own div, so both buttons are
+   :nth-of-type(1) of their parent and the second never matched. */
+.rz-cart button.rz-buynow{
+  background:var(--az-buynow) !important; border-color:var(--az-buynow) !important;
+}
+.rz-cart [class*="incrementor--"]{ border:1px solid var(--az-line) !important; }
+
+/* SKU / variant chooser. Rakuten lays the options out in a fixed-width row
+   that overflows a 275px buy box (orbis-shop's つめかえ option was clipped);
+   let them wrap and fill the column instead. */
+.rz-cart .normal-reserve-skuSelectionArea, .rz-cart [class*="sku"]{
+  display:block !important; width:100% !important;
+}
+.rz-cart [class*="inner-attributes"], .rz-cart [class*="attribute-values"],
+.rz-cart [class*="choices"], .rz-cart ul{
+  display:flex !important; flex-wrap:wrap !important; gap:6px !important;
+  width:100% !important; padding-left:0 !important; list-style:none !important;
+}
+.rz-cart [class*="sku"] button, .rz-cart [class*="attribute"] button,
+.rz-cart li button{
+  min-width:0 !important; max-width:100% !important;
+  white-space:normal !important; border-radius:8px !important;
+  background:#fff !important; border:1px solid #888C8C !important;
+  font-size:13px !important; padding:7px 10px !important;
+}
+/* fill the grid cell so every option is the same width */
+.rz-cart [class*="grid-element--"] button, .rz-cart [class*="grid--"] button{ width:100% !important; }
+/* Selected option. Rakuten puts a selected--XXXX class on the BUTTON, not on
+   an ancestor, and carries no aria-pressed — so the old
+   [aria-pressed] / [class*="selected"] button pair matched nothing and the
+   chosen option looked identical to the rest. Amazon's selected control is a
+   crimson border against #888C8C unselected. */
+.rz-cart button[class*="selected--"],
+.rz-cart [class*="sku"] button[aria-pressed="true"]{
+  border:2px solid var(--az-link) !important; background:#FDF4F4 !important;
+  box-shadow:0 0 0 1px var(--az-link) !important;
+}
+
+/* 商品の詳細, in the centre column the way amazon places it */
+.rz-details{ padding:16px 0 4px; border-top:1px solid var(--az-line); }
+.rz-details h3{ font-size:17px; font-weight:700; margin:0 0 10px; }
+.rz-details table{ border-collapse:collapse !important; width:100% !important;
+                   font-size:13px !important; table-layout:fixed !important; }
+.rz-details td, .rz-details th{
+  border:0 !important; border-bottom:1px solid #EDEDED !important;
+  padding:7px 10px !important; text-align:left !important; vertical-align:top !important;
+  word-break:break-word !important;
+}
+.rz-details tr > td:first-child, .rz-details tr > th:first-child{
+  background:#F7F7F7 !important; font-weight:700 !important; width:38% !important;
+}
+/* Rakuten nests the real spec table inside a single-cell wrapper row; without
+   this the wrapper cell itself gets painted as a grey key column. */
+.rz-details td:only-child{
+  background:transparent !important; font-weight:400 !important; width:auto !important;
+  padding:0 !important; border:0 !important;
+}
+
+/* customer reviews, rebuilt */
+.rz-rsum{ display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+.rz-rbig{ font-size:34px; line-height:1; font-weight:400; }
+.rz-rbig span{ font-size:15px; color:var(--az-sub); }
+.rz-rsum .rz-stars{ font-size:19px; }
+.rz-rcount{ font-size:13px; color:var(--az-sub); margin-top:5px; }
+.rz-rall{ font-size:14px; margin:14px 0 20px; display:inline-block; }
+
+/* star histogram, pulled from the review page (see loadHistogram) */
+.rz-hist{ max-width:430px; margin:2px 0 18px; }
+.rz-hrow{
+  display:flex; align-items:center; gap:10px; padding:3px 0;
+  text-decoration:none !important; color:inherit !important;
+}
+.rz-hrow:hover .rz-hpct{ text-decoration:underline; }
+.rz-hlabel{ flex:0 0 46px; font-size:13px; color:var(--az-link); white-space:nowrap; }
+.rz-htrack{
+  flex:1 1 auto; height:19px; background:#F0F2F2; border:1px solid #E3E5E5;
+  border-radius:3px; overflow:hidden;
+}
+.rz-hfill{ display:block; height:100%; background:var(--az-star); }
+.rz-hpct{ flex:0 0 36px; text-align:right; font-size:13px; color:var(--az-link); }
+.rz-rlist{ display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:22px 34px; }
+.rz-rcard{ font-size:14px; line-height:1.7; }
+.rz-rwho{ display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+.rz-av{ width:26px; height:26px; border-radius:50%; background:#E3E6E6; color:var(--az-sub);
+        display:flex; align-items:center; justify-content:center; font-size:12px; flex:0 0 auto; }
+.rz-rname{ font-size:13px; }
+.rz-rmeta{ font-size:12px; color:var(--az-sub); }
+.rz-rhead{ display:flex; align-items:center; gap:8px; }
+.rz-rtitle{ font-size:14px; font-weight:700; }
+.rz-rdate{ font-size:12px; color:var(--az-sub); margin:3px 0 6px; }
+.rz-rtext{ color:#0F1111; }
+
+.rz-sec{ margin-top:36px; padding-top:24px; border-top:1px solid var(--az-line); }
+.rz-sec h2{ font-size:19px; margin:0 0 13px; }
+.rz-sec table{ border-collapse:collapse; font-size:13px; }
+.rz-sec td, .rz-sec th{ border:1px solid var(--az-line); padding:7px 10px; text-align:left; }
+
+.rz-shopwrap{ border:1px solid var(--az-line); border-radius:8px; padding:0 14px; margin-top:10px; }
+.rz-shopwrap > summary{ cursor:pointer; padding:13px 0; font-size:14px;
+                        color:var(--az-link); list-style:none; }
+.rz-shopwrap > summary::-webkit-details-marker{ display:none; }
+.rz-shopwrap > summary::before{ content:"▸ "; }
+.rz-shopwrap[open] > summary::before{ content:"▾ "; }
+.rz-shopbody{ max-height:80vh; overflow:auto; border-top:1px solid var(--az-line); padding:12px 0; }
+
+/* Medium: keep gallery and details side by side — only the buy box drops,
+   full width under them. Collapsing straight to one column here is what blew
+   the hero up to full-screen. */
+/* Measured: the 4-column layout still fits with no overflow down to 1100px
+   (64 + 200 + 220 + 400 + 3x24 gaps + 36 padding). Dropping to the stacked
+   layout at 1320 was premature and is what pushed the buy box 1,600px down. */
+@media (max-width:1100px){
+  .rz-main{ grid-template-columns:56px minmax(220px,420px) minmax(240px,1fr); }
+  .rz-cen{ grid-column:auto; }
+  .rz-buy{ grid-column:1 / -1; width:100%; max-width:520px; position:static; margin-top:8px; }
+}
+/* Narrow: single column, gallery rail turns horizontal. */
+@media (max-width:860px){
+  .rz-main{ grid-template-columns:1fr; }
+  .rz-thumbs{ flex-direction:row; flex-wrap:wrap; order:2; }
+  .rz-hero{ position:static; max-width:100%; order:1; }
+  .rz-hero img{ max-height:60vh; }
+  .rz-cen{ order:3; }
+  .rz-buy{ order:4; max-width:100%; }
+  .rz-rlist{ grid-template-columns:1fr; }
+}
+
+/* ==========================================================================
+   SEARCH RESULTS — styled in place; Rakuten's own markup is consistent here.
+   Card anatomy measured off an amazon.co.jp search card for the same query:
+     title    16px / 400 / #0F1111   (NEVER a coloured link)
+     price    21px / 400 / red       (search prices ARE red on .co.jp,
+                                      unlike the black prices on a PDP)
+     rating   12px, count in link colour
+     delivery 14px / #0F1111, the date in bold — the strongest trust signal
+                                      on the card, and the thing we had
+                                      buried at 12px grey
+     card     ~330px wide
+   ========================================================================== */
+.rz-search .searchresultitem[data-card-type="cpc"],
+.rz-search .searchresultitem[data-track-type="cpc"],
+.rz-search .searchresultitem[data-track-doc-type="rpp"]{ display:none !important; }
+
+.rz-search .dui-container.main{ max-width:1500px !important; margin:0 auto !important; }
+.rz-search [class*="grid-container--"]{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) !important; gap:0 !important;
+}
+.rz-search [class*="search-results--"]{ display:block !important; }
+.rz-search .searchresultitem{
+  width:auto !important; padding:18px 16px 22px !important;
+  border-right:1px solid var(--az-line) !important;
+  border-bottom:1px solid var(--az-line) !important;
+  background:#fff !important; box-shadow:none !important;
+}
+.rz-search .searchresultitem [class*="image-wrapper--"]{
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  height:230px !important; margin-bottom:12px !important;
+}
+.rz-search .searchresultitem [class*="image--"]{
+  max-height:230px !important; width:auto !important; object-fit:contain !important;
+}
+
+/* title — the single biggest difference: ours were crimson, so every result
+   shouted equally and nothing scanned */
+.rz-search .searchresultitem [class*="title-link--"]{
+  color:#0F1111 !important; font-size:16px !important; font-weight:400 !important;
+  line-height:1.45 !important; display:-webkit-box !important;
+  -webkit-line-clamp:3 !important; -webkit-box-orient:vertical !important; overflow:hidden !important;
+}
+.rz-search .searchresultitem [class*="title-link--"]:hover{
+  color:var(--az-hover) !important; text-decoration:underline !important;
+}
+
+.rz-search .searchresultitem .content.review{ margin-top:6px !important; }
+.rz-search .searchresultitem .dui-icon.-rating,
+.rz-search .searchresultitem .dui-icon.-halfrating{ color:var(--az-star) !important; }
+.rz-search .searchresultitem .content.review .score { color:var(--az-ink) !important; font-size:13px !important; }
+.rz-search .searchresultitem .content.review .legend{ color:var(--az-link) !important; font-size:13px !important; }
+
+.rz-search .searchresultitem [class*="price--"]{
+  color:var(--az-link) !important; font-size:22px !important; font-weight:400 !important;
+  letter-spacing:-.3px !important; margin:8px 0 2px !important;
+}
+.rz-search .searchresultitem [class*="main-price-unit--"]{ font-size:14px !important; }
+.rz-search .searchresultitem [class*="free-shipping-label--"]{
+  color:var(--az-ink) !important; background:none !important; border:0 !important;
+  font-size:13px !important; font-weight:400 !important;
+}
+.rz-search .searchresultitem [class*="points--"]{ color:var(--az-sub) !important; font-size:12px !important; }
+
+/* coupon chip — Amazon surfaces these prominently; we were hiding them */
+.rz-search .searchresultitem .content.coupons{ display:block !important; margin:7px 0 0 !important; }
+.rz-search .searchresultitem .coupon{
+  display:inline-block; background:#FDF0F0; color:var(--az-link);
+  border:1px solid #F0D2D2; border-radius:4px; padding:3px 8px; font-size:12px; line-height:1.4;
+}
+
+/* deal / delivery chips (SALE半額商品, 最強翌日配送, 39ショップ) — these are
+   Rakuten's equivalent of Amazon's ベストセラー / タイムセール badges, and we
+   were hiding the lot. Un-hidden, laid out as a chip row, images capped. */
+.rz-search .searchresultitem [class*="grid-tags--"]{
+  display:flex !important; flex-wrap:wrap !important; gap:6px !important;
+  align-items:center !important; margin:7px 0 0 !important;
+}
+.rz-search .searchresultitem [class*="grid-tags--"] img{ max-height:18px !important; width:auto !important; }
+
+/* delivery promise, promoted from 12px grey to 14px ink */
+.rz-search .searchresultitem .content.shipping-status{
+  color:var(--az-ink) !important; font-size:14px !important; margin-top:7px !important;
+}
+/* seller stays quiet and last */
+.rz-search .searchresultitem .content.merchant{
+  color:#767676 !important; font-size:12px !important; margin-top:7px !important;
+}
+
+/* still not worth showing: hover actions, variant swatches, the ranking ribbon */
+.rz-search .searchresultitem .ranking,
+.rz-search .searchresultitem [class*="overlay--"],
+.rz-search .searchresultitem .content.extra,
+.rz-search .searchresultitem [class*="sku-attributes--"]{ display:none !important; }
+
+.rz-search .dui-container.infobar{ font-size:14px !important; }
+.rz-search .dui-container.aside a{ color:var(--az-ink) !important; font-size:13px !important; }
+.rz-search .searchPagination a, .rz-search .searchPagination span{
+  border:1px solid var(--az-line) !important; border-radius:8px !important;
+  padding:8px 14px !important; color:var(--az-ink) !important; background:#fff !important;
+}
