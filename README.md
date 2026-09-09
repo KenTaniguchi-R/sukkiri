@@ -12,9 +12,16 @@ need — photos, price, delivery, buy button — are at the top, in one screen.
 own storefront: award badges, a FASHION/HOME menu, a shop search box, and three
 promotional banners. Nothing about the product you clicked on.](docs/before-item.png)
 
-The product you clicked on is not on this screen. It is not on the next twelve
-either. On this page the cart button sits **121,273 pixels down** — about
-**143 screens** — under the shop's own banners and marketing.
+The product you clicked on is not on this screen. Nor on the next hundred.
+Here is the same page sampled all the way down to the cart:
+
+![Eight screenshots taken at increasing scroll positions on the same product
+page — 0px, 11,018px, 22,037px, 33,055px, 55,091px, 77,128px, 99,164px — every
+one of them the shop's own marketing photos, until the cart finally appears at
+121,201px.](docs/before-scrolldepth.png)
+
+Every frame is the shop's own marketing. The cart is in the last one, at
+**121,201 pixels** — roughly **143 screens** of scrolling.
 
 ### After
 
@@ -22,7 +29,7 @@ either. On this page the cart button sits **121,273 pixels down** — about
 -62% ¥1,499〜¥1,999 in the middle, and a buy box on the right with points, stock
 and the variant picker.](docs/after-item.png)
 
-Same product, same page: **132,969 pixels of page reduced to 2,033.**
+Same product, same page: **132,985 pixels of page reduced to 2,033.**
 
 ---
 
@@ -31,7 +38,7 @@ Same product, same page: **132,969 pixels of page reduced to 2,033.**
 **Product pages**
 
 - The buy box moves to the top. On the page above, the cart form sat at
-  **121,273px** and now sits at **408px**.
+  **121,201px** and now sits at **408px**.
 - Photos come from Rakuten's own product gallery, not the shop's banner art.
 - Points, instalments and 定期購入 (subscription) stay exactly where you can see
   them, because they're moved, not recreated.
