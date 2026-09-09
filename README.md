@@ -8,17 +8,21 @@ need — photos, price, delivery, buy button — are at the top, in one screen.
 
 ### Before
 
-![A Rakuten product page before Sukkiri: a Rakuten Mobile strip, a Super SALE
-bar, the shop's own header, two coupon banners down the left, and a coupon
-popup covering the content. No price and no cart button anywhere in view.](docs/before-item.png)
+![A Rakuten product page before Sukkiri. The whole first screen is the shop's
+own storefront: award badges, a FASHION/HOME menu, a shop search box, and three
+promotional banners. Nothing about the product you clicked on.](docs/before-item.png)
+
+The product you clicked on is not on this screen. It is not on the next twelve
+either. On this page the cart button sits **121,273 pixels down** — about
+**143 screens** — under the shop's own banners and marketing.
 
 ### After
 
 ![The same page with Sukkiri: a photo gallery on the left, the product name and
-¥3,740 in the middle with a spec table, and a buy box on the right with points,
-stock, the variant picker and かごに追加 — all visible without scrolling.](docs/after-item.png)
+-62% ¥1,499〜¥1,999 in the middle, and a buy box on the right with points, stock
+and the variant picker.](docs/after-item.png)
 
-Same product. Same page. Everything you need is now above the fold.
+Same product, same page: **132,969 pixels of page reduced to 2,033.**
 
 ---
 
@@ -26,8 +30,8 @@ Same product. Same page. Everything you need is now above the fold.
 
 **Product pages**
 
-- The buy box moves to the top. On the worst page tested, the cart button sat
-  **121,372 pixels** down — about 147 screens. It now lands around 600.
+- The buy box moves to the top. On the page above, the cart form sat at
+  **121,273px** and now sits at **408px**.
 - Photos come from Rakuten's own product gallery, not the shop's banner art.
 - Points, instalments and 定期購入 (subscription) stay exactly where you can see
   them, because they're moved, not recreated.
