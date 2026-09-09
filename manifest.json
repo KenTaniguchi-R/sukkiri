@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Sukkiri",
-  "version": "1.2.2",
-  "description": "Rebuilds Rakuten Ichiba product and search pages into a clean layout, so the price and cart sit at the top. Unofficial.",
+  "name": "Sukkiri（すっきり）",
+  "version": "1.2.3",
+  "description": "楽天市場の商品ページと検索結果を、価格とカートが先に目に入るレイアウトに作り替えます。非公式の拡張機能です。",
   "content_scripts": [
     {
       "matches": [
@@ -29,7 +29,7 @@
     "storage"
   ],
   "action": {
-    "default_title": "Sukkiri: click to turn the clean layout on or off",
+    "default_title": "Sukkiri｜クリックで整形のオン・オフ",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

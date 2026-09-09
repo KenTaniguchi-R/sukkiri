@@ -1,6 +1,6 @@
 # Chrome Web Store submission — Sukkiri
 
-Everything below is copy-paste. Upload `sukkiri-v1.2.2.zip` from the v1.2.2
+Everything below is copy-paste. Upload `sukkiri-v1.2.3.zip` from the v1.2.3
 release, then work down this file.
 
 Dashboard: https://chrome.google.com/webstore/devconsole
@@ -8,61 +8,58 @@ One-time developer registration fee: **US$5** (your Google account, not mine).
 
 ---
 
-## Store listing
+## Store listing — Japanese
+
+Target users are Japanese Rakuten shoppers, so everything they read is in
+Japanese. The reviewer-facing fields in the next section stay in English,
+since that is who reads them.
 
 **Item name** (45 char max)
 ```
-Sukkiri — clean layout for Rakuten Ichiba
+Sukkiri（すっきり）
+```
+Deliberately not 「楽天市場…」 — putting a trademark in the extension name is
+what gets listings pulled. Using it factually in the description is fine.
+
+**Short description** (132 char max — this is what shows in search results)
+```
+楽天市場の商品ページと検索結果を見やすく整えます。価格とカートが上に来るので、ショップの宣伝を延々とスクロールせずに済みます。
 ```
 
-**Short description** (132 char max — this is the one that shows in search)
-```
-Rebuilds 楽天市場 product and search pages into a clean layout, so the price and cart are at the top instead of far below.
-```
-
-**Category:** Shopping
-**Language:** Japanese (primary). Add English if you want a second listing.
+**Category:** ショッピング (Shopping)
+**Language:** 日本語 — set this as the primary listing language.
 
 **Detailed description**
 ```
-Rakuten Ichiba product pages put the shop's own marketing above the product.
-On a real page measured with this extension, the cart button sat 121,273
-pixels down — about 143 screens of banners and photographs before you could
-buy anything.
+楽天市場の商品ページは、ショップの宣伝が商品より先に来ます。実際に測ったページでは、「かごに追加」ボタンが 121,273 ピクセル下にありました。画面にして約 143 枚分です。
 
-Sukkiri rebuilds the page so the useful parts come first.
+Sukkiri は、必要な情報が先に来るようにページを組み直します。
 
-PRODUCT PAGES
-• Photos, price, points, delivery and the buy button at the top
-• Product gallery from Rakuten's own image data, not the shop's banner art
-• Points, instalments and 定期購入 (subscription) all preserved
-• Reviews shown as cards, with a star breakdown
-• The shop's original page is kept, folded under 「ショップの商品説明」
+■ 商品ページ
+・写真、価格、ポイント、配送、購入ボタンを上部にまとめます
+・写真はショップのバナー画像ではなく、楽天の商品画像を使います
+・ポイント、分割払い、定期購入はそのまま残ります
+・レビューはカード表示になり、星の分布も出ます
+・ショップ独自のページは「ショップの商品説明」に折りたたんで残します
 
-SEARCH AND CATEGORY PAGES
-• Larger cards with bigger photos
-• Titles in plain black instead of every result in red
-• Delivery estimate promoted, since that is what you compare
-• Sponsored results hidden
+■ 検索・カテゴリページ
+・カードと商品画像を大きく
+・商品名は赤ではなく黒にして読みやすく
+・お届け予定日を目立たせます
+・広告（PR）商品は非表示
 
-Rakuten's own header is left exactly as it is.
+楽天のヘッダーには手を加えません。
 
-TURNING IT OFF
-Click the toolbar icon. The badge shows OFF and the page reloads exactly as
-Rakuten made it. Nothing is restyled and nothing is rebuilt while it is off.
+■ オフにする
+ツールバーのアイコンをクリックすると、バッジに OFF と表示され、ページは楽天のままの状態で再読み込みされます。オフの間は一切手を加えません。
 
-This matters because Sukkiri moves the real cart form into its new layout
-rather than copying it, so your quantity, variant choice and login session
-keep working. If a rebuild ever fails partway, the extension detects it and
-restores Rakuten's original page by itself.
+Sukkiri はカートのフォームを複製せず、そのまま移動させています。数量や種類の選択、ログイン状態がそのまま使えるのはこのためです。万一途中で失敗した場合は、自動的に楽天の元のページに戻します。
 
-PRIVACY
-No accounts, no analytics, no tracking. Nothing is collected and nothing is
-sent anywhere. The only network request is to review.rakuten.co.jp, to read
-the star breakdown for the product page you are already looking at.
+■ プライバシー
+アカウント登録なし、解析なし、追跡なし。情報の収集も送信も行いません。通信は、表示中の商品の星の分布を読み取るために review.rakuten.co.jp へ行うものだけです。
 
-Independent project, not affiliated with or endorsed by Rakuten.
-Source code: https://github.com/KenTaniguchi-R/sukkiri
+楽天グループ株式会社とは関係のない、個人が作った拡張機能です。
+ソースコード: https://github.com/KenTaniguchi-R/sukkiri
 ```
 
 ---
@@ -131,9 +128,14 @@ The dashboard rejects the upload before you see any form if these are wrong:
 
 | Field | Limit | Ours |
 |---|---|---|
-| `manifest.description` | **132 chars** | 119 |
-| `manifest.name` | 45 chars | 7 |
-| Store short description | 132 chars | see above |
+| `manifest.description` | **132 chars** | 54 |
+| `manifest.name` | 45 chars | 13 |
+| `action.default_title` | 132 chars | 21 |
+| Store short description | 132 chars | 63 |
+
+Japanese counts as one character per character here, not per byte — the
+132-character cap is generous in Japanese, but check it anyway before every
+upload. That is what blocked v1.2.1.
 
 The manifest description is the one that catches people — it is a *different*
 field from the store listing description, and only the manifest one is capped

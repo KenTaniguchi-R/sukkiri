@@ -2,6 +2,10 @@
 
 **A Chrome extension that makes 楽天市場 readable.**
 
+> 楽天市場の商品ページと検索結果を見やすく整える Chrome 拡張機能です。
+> 価格とカートが上に来るので、ショップの宣伝を延々とスクロールせずに済みます。
+> 楽天グループ株式会社とは関係のない、個人が作ったものです。
+
 Rakuten product pages bury the price and the cart button under thousands of
 pixels of shop banners. Sukkiri rebuilds the page so the things you actually
 need — photos, price, delivery, buy button — are at the top, in one screen.
