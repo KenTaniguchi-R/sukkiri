@@ -107,8 +107,8 @@ Worth knowing before you install:
 
 - **Tested on 12 shops.** Rakuten has roughly 50,000, and every one writes its
   own product-page HTML. Yours might be one it hasn't seen.
-- **No one has completed a purchase with it enabled yet.** It's built carefully
-  around this, but that test hasn't been run.
+- **Checkout has been completed once, on one shop.** That's the test that
+  matters most, and it passed — but it is one data point, not coverage.
 - **A Rakuten redesign will break it,** all at once, for everyone. This is a
   personal project, not a maintained product.
 - **Sponsored results are hidden** on search pages.
