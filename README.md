@@ -6,30 +6,34 @@ Rakuten product pages bury the price and the cart button under thousands of
 pixels of shop banners. Sukkiri rebuilds the page so the things you actually
 need — photos, price, delivery, buy button — are at the top, in one screen.
 
-### Before
+### One product page, before and after
+
+![Left: a single Rakuten product page laid out in ten tall columns, every one
+of them the shop's own dress photography, running 121,201 pixels before the
+cart appears. Right: the same page after Sukkiri, a single small block
+1,990 pixels tall.](docs/before-after-full.png)
+
+Both sides are the same page at the same scale. On the left, the ten columns
+are one continuous scroll: award badges, then shop banners, then several
+hundred marketing photographs, and the cart button only at the very bottom —
+**121,201 pixels down**, roughly 143 screens.
+
+On the right is the same product after Sukkiri: **1,990 pixels**, everything
+you need in one screen.
+
+### The first screen
 
 ![A Rakuten product page before Sukkiri. The whole first screen is the shop's
 own storefront: award badges, a FASHION/HOME menu, a shop search box, and three
 promotional banners. Nothing about the product you clicked on.](docs/before-item.png)
 
-The product you clicked on is not on this screen. Nor on the next hundred.
-Here is the same page sampled all the way down to the cart:
-
-![Eight screenshots taken at increasing scroll positions on the same product
-page — 0px, 11,018px, 22,037px, 33,055px, 55,091px, 77,128px, 99,164px — every
-one of them the shop's own marketing photos, until the cart finally appears at
-121,201px.](docs/before-scrolldepth.png)
-
-Every frame is the shop's own marketing. The cart is in the last one, at
-**121,201 pixels** — roughly **143 screens** of scrolling.
-
-### After
+Before — the product you clicked on is not on this screen.
 
 ![The same page with Sukkiri: a photo gallery on the left, the product name and
 -62% ¥1,499〜¥1,999 in the middle, and a buy box on the right with points, stock
 and the variant picker.](docs/after-item.png)
 
-Same product, same page: **132,985 pixels of page reduced to 2,033.**
+After — photos, price, points, stock and the buy box, all above the fold.
 
 ---
 
