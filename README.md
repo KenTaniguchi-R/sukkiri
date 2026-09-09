@@ -6,20 +6,34 @@ Rakuten product pages bury the price and the cart button under thousands of
 pixels of shop banners. Sukkiri rebuilds the page so the things you actually
 need — photos, price, delivery, buy button — are at the top, in one screen.
 
-### One product page, before and after
+## One product page, before and after
 
-![Left: a single Rakuten product page laid out in ten tall columns, every one
-of them the shop's own dress photography, running 121,201 pixels before the
-cart appears. Right: the same page after Sukkiri, a single small block
-1,990 pixels tall.](docs/before-after-full.png)
+Both images below are the same page at the same scale.
 
-Both sides are the same page at the same scale. On the left, the ten columns
-are one continuous scroll: award badges, then shop banners, then several
-hundred marketing photographs, and the cart button only at the very bottom —
-**121,201 pixels down**, roughly 143 screens.
+<table>
+  <tr>
+    <th align="left">Before &mdash; 121,201px to reach the cart</th>
+    <th align="left">After &mdash; 1,990px</th>
+  </tr>
+  <tr valign="top">
+    <td>
+      <img src="docs/before-full.png" width="780"
+           alt="One Rakuten product page captured in full and folded into ten tall columns. Every column is the shop's own dress photography and banners; the cart button appears only at the bottom of the tenth.">
+    </td>
+    <td>
+      <img src="docs/after-full.png" width="85"
+           alt="The same page after Sukkiri: a single short column with the gallery, price, buy box and reviews.">
+    </td>
+  </tr>
+</table>
 
-On the right is the same product after Sukkiri: **1,990 pixels**, everything
-you need in one screen.
+The left image is one continuous scroll, folded into ten columns so it fits on
+screen. Award badges, shop banners, then several hundred marketing photographs
+&mdash; and the cart button only at the very bottom, **121,201 pixels down**,
+roughly 143 screens.
+
+The right image is the same product after Sukkiri, at the same scale:
+**1,990 pixels.**
 
 ### The first screen
 
@@ -27,13 +41,13 @@ you need in one screen.
 own storefront: award badges, a FASHION/HOME menu, a shop search box, and three
 promotional banners. Nothing about the product you clicked on.](docs/before-item.png)
 
-Before — the product you clicked on is not on this screen.
+Before &mdash; the product you clicked on is not on this screen.
 
 ![The same page with Sukkiri: a photo gallery on the left, the product name and
 -62% ¥1,499〜¥1,999 in the middle, and a buy box on the right with points, stock
 and the variant picker.](docs/after-item.png)
 
-After — photos, price, points, stock and the buy box, all above the fold.
+After &mdash; photos, price, points, stock and the buy box, all above the fold.
 
 ---
 
