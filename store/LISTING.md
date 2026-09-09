@@ -1,6 +1,6 @@
 # Chrome Web Store submission — Sukkiri
 
-Everything below is copy-paste. Upload `sukkiri-v1.2.1.zip` from the v1.2.1
+Everything below is copy-paste. Upload `sukkiri-v1.2.2.zip` from the v1.2.2
 release, then work down this file.
 
 Dashboard: https://chrome.google.com/webstore/devconsole
@@ -122,6 +122,22 @@ insists, point it at the Privacy section of the README:
 | `screenshot-4-reviews.png` | 1280×800 | star breakdown |
 | `promo-440x280.png` | 440×280 | small promo tile (optional) |
 | `../icons/icon-128.png` | 128×128 | store icon (required) |
+
+---
+
+## Field limits that actually bite
+
+The dashboard rejects the upload before you see any form if these are wrong:
+
+| Field | Limit | Ours |
+|---|---|---|
+| `manifest.description` | **132 chars** | 119 |
+| `manifest.name` | 45 chars | 7 |
+| Store short description | 132 chars | see above |
+
+The manifest description is the one that catches people — it is a *different*
+field from the store listing description, and only the manifest one is capped
+at 132.
 
 ---
 
