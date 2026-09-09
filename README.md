@@ -1,82 +1,156 @@
 # Sukkiri（すっきり）
 
-Rebuilds Rakuten Ichiba (楽天市場) product and search pages into a clean,
-scannable layout modelled on Amazon.co.jp.
+**A Chrome extension that makes 楽天市場 readable.**
 
-**Independent project. Not affiliated with, endorsed by, or connected to Rakuten.**
-"Rakuten" and "楽天市場" are trademarks of Rakuten Group, Inc., used here only to
-say factually which site this works on.
+Rakuten product pages bury the price and the cart button under thousands of
+pixels of shop banners. Sukkiri rebuilds the page so the things you actually
+need — photos, price, delivery, buy button — are at the top, in one screen.
 
-Not a restyle. Rakuten item pages have no shared layout — every shop hand-writes
-its own HTML — so there is nothing stable to style. What *is* stable is the data
-Rakuten itself injects into every shop page:
+### Before
 
-| anchor | gives |
-|---|---|
-| `meta[itemprop=image]` | canonical product gallery (not the shop's banners) |
-| `meta[itemprop=name]` | product name |
-| `#itemPrice` | price, incl. ranges + list price |
-| `meta[itemprop=price]` | numeric low price (fallback) |
-| `#js-review-widget` | rating + reviews |
-| `#offers` | price, points, installments, **定期購入 subscription chooser** |
-| `table.normal-reserve-form` | the live cart form |
-| `ld+json BreadcrumbList` | category path |
-| review page `aria-label="Rating Distribution"` | star histogram (fetched) |
+![A Rakuten product page before Sukkiri: a Rakuten Mobile strip, a Super SALE
+bar, the shop's own header, two coupon banners down the left, and a coupon
+popup covering the content. No price and no cart button anywhere in view.](docs/before-item.png)
 
-`content.js` reads those, builds an Amazon PDP, and **moves** both `#offers` and
-the real cart form into the new buy box with `appendChild` (not a clone) so
-Rakuten's own listeners, SKU logic and CSRF state survive and the item stays
-purchasable. `#offers` matters: it carries points, installments and the
-定期購入 subscription option, none of which are in the meta tags — rebuilding
-the buy box without it silently drops the ability to subscribe.
+### After
 
-The buy column is 400px rather than Amazon's 275px, because the blocks moved
-into it are Rakuten components authored for 400px; below that they visibly
-break (prices split mid-number, labels stack one character per line). The shop's
-original page is kept, collapsed, under 「ショップの商品説明」.
+![The same page with Sukkiri: a photo gallery on the left, the product name and
+¥3,740 in the middle with a spec table, and a buy box on the right with points,
+stock, the variant picker and かごに追加 — all visible without scrolling.](docs/after-item.png)
 
-The **layout** is Amazon's; the **colour** is Rakuten's. Actions use Rakuten
-crimson `#BF0000` (buy-now `#8F0000`) with white labels, links `#BF0000`,
-stars `#F5A623`, borders `#DDDDDD`, 在庫あり `#0B7B3C`, prices flat `#0F1111`.
+Same product. Same page. Everything you need is now above the fold.
 
-Rakuten's own header is left completely untouched. Restyling it meant painting
-its text white, and every light popover nested inside it then rendered
-white-on-white — the SPU point panel, then all ten search suggestions. The
-value here is the rebuilt product page, not the chrome.
+---
+
+## What it changes
+
+**Product pages**
+
+- The buy box moves to the top. On the worst page tested, the cart button sat
+  **121,372 pixels** down — about 147 screens. It now lands around 600.
+- Photos come from Rakuten's own product gallery, not the shop's banner art.
+- Points, instalments and 定期購入 (subscription) stay exactly where you can see
+  them, because they're moved, not recreated.
+- Reviews get a star breakdown and readable cards.
+- The shop's original page isn't thrown away — it's folded under
+  「ショップの商品説明」 if you want the seller's full pitch.
+
+**Search and category pages**
+
+![Rakuten search results with Sukkiri: three wide cards per row with large
+photos, black readable titles, red prices, and the delivery estimate promoted.](docs/after-search.png)
+
+- Titles in plain black instead of every result shouting in red.
+- Bigger cards, bigger photos, three per row.
+- The delivery estimate promoted — it's the thing you're actually comparing.
+- Sponsored results hidden.
+
+**Rakuten's own header is left completely alone.**
+
+---
 
 ## Install
 
-1. `chrome://extensions` → enable Developer mode
-2. "Load unpacked" → select this folder
+Not on the Chrome Web Store — see [Honest limitations](#honest-limitations).
 
-## Safety
+1. Download this repo (**Code → Download ZIP**, then unzip) or `git clone` it
+2. Go to `chrome://extensions`
+3. Turn on **Developer mode** (top right)
+4. Click **Load unpacked** and pick the folder
 
-`content.js` returns early unless the cart form, gallery and price are all found,
-so a shop with unexpected markup is left untouched rather than broken.
-
+Open any Rakuten product page and it works.
 
 ## Turning it off
 
-Click the toolbar icon. The badge shows `OFF` and the page reloads untouched.
+**Click the toolbar icon.** The badge shows `OFF` and the page reloads exactly
+as Rakuten made it. Click again to turn it back on.
 
-This matters more than it would for a normal theme: the extension **moves the
-live cart form** into the rebuilt buy box, so a shop whose markup it mishandles
-could leave someone unable to buy. One click always gets Rakuten back.
+This matters more than for a normal theme. Sukkiri *moves* the real cart form
+into its new layout rather than copying it, so your quantity, variant choice and
+login session keep working. But it also means a shop with unusual page code
+could confuse it — so there is always a one-click way back.
 
-"Off" is genuinely off rather than a visual undo. Every rule in `content.css` is
-scoped to `.rz-item` / `.rz-search`, and those classes are only added when the
-extension is enabled — so when it is off, no stylesheet applies and no rebuild
-runs. Verified: zero classes added on the disabled path.
+If something does go wrong mid-rebuild, Sukkiri detects it and restores
+Rakuten's original page by itself, rather than leaving you on a broken one.
 
-## Known limits
+---
 
-- Verified against 12 shops. Rakuten has roughly 50,000, each writing its own
-  product-page HTML.
-- No purchase has been completed end to end with it enabled.
-- Class names are hashed (`title-link--3Yuev`). Selectors use `[class*="prefix--"]`
-  so they survive hash changes, but a Rakuten redesign will break them at once.
-- Sponsored (CPC) results are hidden.
+## Honest limitations
+
+Worth knowing before you install:
+
+- **Tested on 12 shops.** Rakuten has roughly 50,000, and every one writes its
+  own product-page HTML. Yours might be one it hasn't seen.
+- **No one has completed a purchase with it enabled yet.** It's built carefully
+  around this, but that test hasn't been run.
+- **A Rakuten redesign will break it,** all at once, for everyone. This is a
+  personal project, not a maintained product.
+- **Sponsored results are hidden** on search pages.
+- Desktop Chrome only.
+
+That's also why it isn't on the Web Store: putting it there is a support
+promise, and this isn't ready to make one.
+
+---
+
+## How it works
+
+<details>
+<summary>For the curious (and for me in six months)</summary>
+
+Rakuten item pages have no shared layout — every shop hand-writes its own HTML —
+so there's nothing stable to style. What *is* stable is the data Rakuten injects
+into every shop page:
+
+| anchor | gives |
+|---|---|
+| `meta[itemprop=image]` | the real product gallery, not the shop's banners |
+| `meta[itemprop=name]` | product name |
+| `#itemPrice` / `meta[itemprop=price]` | price, ranges, list price |
+| `#offers` | points, instalments, 定期購入 chooser |
+| `#js-review-widget` | rating and reviews |
+| `table.normal-reserve-form` | the live cart form |
+| `ld+json BreadcrumbList` | category path |
+
+`content.js` reads those and builds a fresh page from them.
+
+**The cart is moved, not cloned.** `appendChild` relocates the live node, so
+Rakuten's own event listeners, SKU logic and CSRF state survive and the item
+stays purchasable. Because that detaches the only way to buy, the whole render
+is wrapped: an anchor comment marks where the cart was, a `try/catch` puts it
+back, and a post-flight check asserts the cart is present *and* visible —
+anything unexpected restores Rakuten's page.
+
+**The star histogram is fetched by the service worker,** not the content script.
+Under Manifest V3 a content script's `fetch` is subject to the *page's* CORS, so
+item.rakuten.co.jp cannot read review.rakuten.co.jp no matter what
+`host_permissions` says. The bars only render if the fetched counts reconcile
+with the rating already on the page — a wrong distribution is worse than none.
+
+**Off is genuinely off.** Every CSS rule is scoped to `.rz-item` / `.rz-search`,
+and those classes are only added when enabled — so disabling applies no
+stylesheet and runs no rebuild, rather than undoing one.
+
+Selectors use `[class*="prefix--"]` because Rakuten's class names carry build
+hashes (`title-link--3Yuev`). That survives a rebuild; it won't survive a
+redesign.
+
+</details>
+
+---
+
+## Privacy
+
+Collects nothing, sends nothing, has no analytics. The only network request it
+makes is to `review.rakuten.co.jp`, to read the star breakdown for the product
+page you're already looking at.
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+*Independent project. Not affiliated with, endorsed by, or connected to Rakuten
+or Amazon. "Rakuten" and "楽天市場" are trademarks of Rakuten Group, Inc.,
+used here only to say which site this works on.*
