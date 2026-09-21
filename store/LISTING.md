@@ -1,6 +1,6 @@
 # Chrome Web Store submission — Sukkiri
 
-Everything below is copy-paste. Upload `sukkiri-v1.2.3.zip` from the v1.2.3
+Everything below is copy-paste. Upload `sukkiri-v1.2.4.zip` from the v1.2.4
 release, then work down this file.
 
 Dashboard: https://chrome.google.com/webstore/devconsole

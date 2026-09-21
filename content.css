@@ -95,7 +95,7 @@
      mid-number, the 定期購入 label stacks one character per line).
      Matching Rakuten's authored width beats matching Amazon's pixel count. */
   display:grid;
-  grid-template-columns:64px minmax(200px,420px) minmax(220px,1fr) 400px;
+  grid-template-columns:64px minmax(200px,420px) minmax(220px,1fr) 300px;
   gap:24px; align-items:start;
 }
 .rz-thumbs{ display:flex; flex-direction:column; gap:8px; }
@@ -147,8 +147,8 @@
 .rz-desc{ font-size:14px; line-height:1.78; padding:15px 0; color:#222; }
 
 .rz-buy{
-  width:400px; border:1px solid var(--az-line); border-radius:8px;
-  padding:14px 18px; position:sticky; top:12px; background:#fff;
+  width:100%; border:1px solid var(--az-line); border-radius:8px;
+  padding:14px 16px; position:sticky; top:12px; background:#fff;
 }
 .rz-buy .amt{ font-size:28px; }
 .rz-buy .cur{ font-size:13px; vertical-align:baseline; }
@@ -193,7 +193,7 @@
 /* SKU option grid. 1fr made every option a full-width row and, combined with
    the width:auto below, left them content-sized and ragged (96 / 124 / 96px).
    auto-fill gives uniform cells that fill the 364px box two-up. */
-.rz-cart [class*="grid-cols-"]{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)) !important; }
+.rz-cart [class*="grid-cols-"]{ grid-template-columns:repeat(auto-fill,minmax(120px,1fr)) !important; }
 .rz-cart [class*="grid-element--"]{ min-width:0 !important; }
 .rz-cart td, .rz-cart th{ display:block !important; width:auto !important;
                           padding:0 !important; border:0 !important; }

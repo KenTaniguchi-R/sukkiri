@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Sukkiri（すっきり）",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "楽天市場の商品ページと検索結果を、価格とカートが先に目に入るレイアウトに作り替えます。非公式の拡張機能です。",
   "content_scripts": [
     {
